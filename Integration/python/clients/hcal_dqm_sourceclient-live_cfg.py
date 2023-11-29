@@ -46,7 +46,27 @@ else:
 	process.load('DQM.Integration.config.inputsource_cfi')
 	from DQM.Integration.config.inputsource_cfi import options
 process.load('DQM.Integration.config.environment_cfi')
-
+#-------------------------------------                                                                                                                    
+#       LONG ADD                                                                                                                         
+#-------------------------------------
+# process.GlobalTag.toGet = cms.VPSet(
+  # cms.PSet(record = cms.string("HcalElectronicsMapRcd"),
+    #        tag = cms.string("HcalElectronicsMap_2023_v1.0_data"),
+      #      connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS")
+        #   )
+# )
+from CondCore.CondDB.CondDB_cfi import *
+process.es_pool = cms.ESSource("PoolDBESSource",
+                               timetype = cms.string('runnumber'),
+                               toGet = cms.VPSet(
+    cms.PSet(record = cms.string("HcalElectronicsMapRcd"),
+    tag = cms.string("HcalElectronicsMap_2023_v1.0_data")
+    )
+  ),
+  connect = cms.string('frontier://FrontierProd/CMS_CONDITIONS'),
+  authenticationMethod = cms.untracked.uint32(0)
+)
+process.es_prefer_es_pool = cms.ESPrefer( "PoolDBESSource", "es_pool" )
 #-------------------------------------
 #	Central DQM Customization
 #-------------------------------------
@@ -147,11 +167,13 @@ process.load('DQM.HcalTasks.TPTask')
 process.load('DQM.HcalTasks.RawTask')
 process.load('DQM.HcalTasks.NoCQTask')
 process.load('DQM.HcalTasks.FCDTask')
-process.load('DQM.HcalTasks.ZDCTask')
+#process.load('DQM.HcalTasks.ZDCTask')
+process.load('DQM.HcalTasks.ZDCQIE10Task')  
+
 #process.load('DQM.HcalTasks.QIE11Task') # 2018: integrate QIE11Task into DigiTask
 process.load('DQM.HcalTasks.HcalOnlineHarvesting')
 process.load('DQM.HcalTasks.HcalQualityTests')
-process.load('DQM.HcalTasks.hcalMLTask_cfi')
+
 
 #-------------------------------------
 #	For Debugginb
@@ -172,8 +194,9 @@ process.rawTask.runkeyVal = runType
 process.rawTask.runkeyName = runTypeName
 process.tpTask.runkeyVal = runType
 process.tpTask.runkeyName = runTypeName
-#process.zdcTask.runkeyVal = runType
-#process.zdcTask.runkeyName = runTypeName
+#pprocess.zdcqie10Task.tagQIE10 = tagQIE10 = cms.untracked.InputTag("hcalDigis", "ZDC")  
+process.zdcqie10Task.runkeyVal = runType
+process.zdcqie10Task.runkeyName = runTypeName
 #process.zdcTask.tagQIE10 = cms.untracked.InputTag("castorDigis")
 #process.qie11Task.runkeyVal = runType
 #process.qie11Task.runkeyName = runTypeName
@@ -192,12 +215,11 @@ process.tasksPath = cms.Path(
 		+process.fcdTask
 		#+process.qie11Task
 		#ZDC to be removed after 2018 PbPb run
-		+process.zdcQIE10Task
-		+process.hcalMLTask
+		#+process.zdcQIE10Task
 )
 
 if isHeavyIon:
-    process.tasksPath += process.zdcQIE10Task
+    process.tasksPath += process.zdcqie10Task
 
 process.harvestingPath = cms.Path(
 	process.hcalOnlineHarvesting
