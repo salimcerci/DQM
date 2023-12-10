@@ -79,7 +79,7 @@ ZDCQIE10Task::ZDCQIE10Task(edm::ParameterSet const& ps)
         
     //book histos per channel
     //std::string histoname;
-    for (int channel = 1; channel < 6; channel++) {
+    for (int channel = 1; channel < 9; channel++) {
 	// EM Pos
 	HcalZDCDetId didp(HcalZDCDetId::EM, true, channel);
 	// cout << " ZDC EM P eid " <<didp()<< " ch "<<channel<<endl;
