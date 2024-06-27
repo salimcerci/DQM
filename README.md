@@ -16,3 +16,7 @@ scram b
 cmsenv
 
 cmsRun DQM/Integration/python/clients/hcal_dqm_sourceclient-live_cfg.py inputFiles=/eos/cms/store/group/dpg_hcal/comm_hcal/PFG/backup_raw/HIHLTPhysics-HIRun2023A-RAW-v1-374344.root runkey=hi_run
+
+cd upload/
+
+root -l DQM_V0001_Hcal_R000374344.root
